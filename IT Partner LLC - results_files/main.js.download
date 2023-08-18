@@ -1,0 +1,81 @@
+const year = new Date().getFullYear();
+$('#currentYear').html(year);
+/*
+const controller = new ScrollMagic.Controller();
+const paralax = document.getElementsByClassName('paralax');
+for (let i = 0; i < paralax.length; i++) {
+    const item = paralax[i];
+    const offset = item.parentElement.getBoundingClientRect();
+    item.offset = offset;
+
+    const diriction = item.attributes.getNamedItem('direction').value;
+    const motion = {
+        up: -40,
+        down: 80
+    };
+
+    const tween = TweenMax.to(item, 0.1, {
+        yPercent: motion[diriction],
+        ease: Linear.easeNone
+    });
+
+    let indent = 0;
+
+    if (paralax[i - 1]) {
+        const prevItem = paralax[i - 1];
+        indent = prevItem.offset.top === item.offset.top ? 140 : 0;
+    }
+
+    const scene = new ScrollMagic.Scene({
+        triggerElement: item.parentElement,
+        duration: "100%",
+        triggerHook: 0.75
+    })
+        .setTween(tween)
+        // .addIndicators({
+        //     name: `Parallax Pin ${i}`,
+        //     indent: indent
+        // })
+        .addTo(controller);
+}
+*/
+function auto_grow(element) {
+    element.style.height = "5px";
+    element.style.height = (element.scrollHeight) + "px";
+}
+
+//go 2 page top
+
+$(window).scroll(function () {
+    if ($(this).scrollTop() > 50) {
+        $('#back-to-top-wrapper').fadeIn();
+    } else {
+        $('#back-to-top-wrapper').fadeOut();
+    }
+});
+
+$('#back-to-top').click(function () {
+    $('body,html').animate({
+        scrollTop: 0
+    }, 600);
+    return false;
+    }
+);
+
+$(window).on("load", function () {
+    let md = new MobileDetect(window.navigator.userAgent);
+    $.mCustomScrollbar.defaults.theme = 'dark-3';
+    if (!md.mobile()) {
+        $(".center-scroll-holder").mCustomScrollbar();
+        $("#back-to-top-customScroll").click(function () {
+            $(".center-scroll-holder").mCustomScrollbar('scrollTo', 'top');
+        })
+    } else {
+        $("#back-to-top-customScroll").click(function () {
+            $('body,html').animate({
+                scrollTop: 0
+            }, 600);
+            return false;
+        });
+    }
+});

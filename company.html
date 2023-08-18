@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .rounded-input {
+            width: 332px;
+            height: 46px;
+            border-radius: 50px; /* Setting to a large value to achieve ellipse shape */
+            padding: 10px;
+            border: 1px solid #ccc;
+            transition: border-color 0.3s ease-in-out; /* Adding a smooth animation */
+        }
+
+        .rounded-input:hover {
+            border-color: #66aaff; /* Changing border color on hover */
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-group">
+    <label for="companyName">Company Name:</label>
+</div>
+
+<div class="form-group">
+    <input type="text" id="companyName" name="companyName" class="rounded-input" placeholder="Text">
+</div>
+
+</body>
+</html>

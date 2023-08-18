@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      .cost-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 30vh;
+      }
+
+      .cost {
+        font-size: 20px;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      .cost span {
+        font-size: 50px;
+        margin-right: 10px;
+      }
+
+      .cost-text {
+        font-size: 18px;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <div class="cost-container">
+      <div class="cost">
+        <span>X</span><span class="smaller">$</span> /user
+        <div class="cost-text">
+          Monthly
+        </div>
+      </div>
+      <div class="cost" style="margin-left: 50px;">
+        <span>X</span><span class="smaller">$</span> /user
+        <div class="cost-text">
+          Annually
+        </div>
+      </div>
+    </div>
+    <!-- <script>
+      // Replace these values with the actual data from the previous form
+      const numberOfUsers = 100; // Example: Number of users
+      const monthlyCostPerUser = 10; // Example: Monthly cost per user in $
+      const annualDiscountPercentage = 10; // Example: Annual discount in percentage
+
+      // Calculate costs
+      const monthlyCost = numberOfUsers * monthlyCostPerUser;
+      const annuallyCost = monthlyCost * 12 * (1 - annualDiscountPercentage / 100);
+
+      // Display calculated costs
+      const costSpans = document.querySelectorAll('.cost span');
+
+      costSpans.forEach(span => {
+        span.textContent = (span.parentElement.id === 'monthly-cost' ? monthlyCost.toFixed(2) : annuallyCost.toFixed(2));
+      });
+    </script> -->
+
+  </body>
+
+</html>

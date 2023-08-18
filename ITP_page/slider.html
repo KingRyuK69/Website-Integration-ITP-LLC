@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    .slider-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 622.535px;
+      flex-shrink: 0;
+      margin-top: 10px;
+    }
+
+    .slider-name {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #0A718A;
+      display: flex;
+      align-items: center;
+    }
+
+    .info-button {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background-color: transparent;
+      border: 1px solid #ccc;
+      color: #333;
+      text-align: center;
+      line-height: 15px;
+      cursor: pointer;
+      margin-left: 5px;
+    }
+
+    .slider {
+      width: 100%;
+      height: 20.926px;
+      flex-shrink: 0;
+      border-radius: 24px;
+      background: #D2D2D2;
+      position: relative;
+    }
+
+    .slider-thumb {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #094C5C;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
+
+    .slider-fill {
+      height: 100%;
+      width: 0;
+      border-radius: 24px;
+      background: #094C5C;
+      position: absolute;
+      left: 0;
+      top: 0;
+      transform-origin: left center;
+      transition: width 0.2s ease-in-out;
+    }
+
+    .slider-input {
+      width: 100%;
+      height: 100%;
+      flex-shrink: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      appearance: none;
+      background: transparent;
+    }
+
+    .slider-input::-webkit-slider-thumb {
+      appearance: none;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #094C5C;
+      cursor: pointer;
+    }
+
+    .slider-value {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      font-weight: bold;
+      margin-top: 5px;
+      color: #0A718A;
+    }
+
+    .info-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.9);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .info-message {
+      padding: 20px;
+      border-radius: 10px;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      color: #333;
+    }
+
+    .close-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="slider-container">
+    <div class="slider-name">Seat Count<span class="info-button" id="info-button">?</span></div>
+    <div class="slider">
+      <div class="slider-fill"></div>
+      <input type="range" min="0" max="100" value="0" class="slider-input">
+    </div>
+    <div class="slider-value">
+      <span>0</span>
+      <span>50</span>
+      <span>Max num</span>
+    </div>
+    <div class="info-overlay" id="info-overlay">
+      <div class="info-message">
+        <span class="close-button" id="close-button">&times;</span>
+        Seat count refers to the amount of places that the customer requests to reserve.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const sliderInput = document.querySelector('.slider-input');
+    const sliderFill = document.querySelector('.slider-fill');
+    const sliderValues = document.querySelectorAll('.slider-value span');
+    const infoButton = document.getElementById('info-button');
+    const infoOverlay = document.getElementById('info-overlay');
+    const closeButton = document.getElementById('close-button');
+
+    sliderInput.addEventListener('input', () => {
+      const value = sliderInput.value;
+
+      sliderFill.style.width = `${value}%`;
+
+      sliderValues[0].textContent = '0';
+      sliderValues[1].textContent = value;
+      sliderValues[2].textContent = 'Max';
+    });
+
+    infoButton.addEventListener('click', () => {
+      infoOverlay.style.display = 'flex';
+    });
+
+    closeButton.addEventListener('click', () => {
+      infoOverlay.style.display = 'none';
+    });
+  </script>
+
+</body>
+
+</html>

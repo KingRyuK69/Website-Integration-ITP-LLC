@@ -1,0 +1,205 @@
+$(document).ready(function () {
+var PayMethods=[];
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-Token': $('meta[name="_token"]').attr('content')
+        }
+    });
+
+    var selectedCardIcon = null;
+    $('.input-card').toArray().forEach(function (field) {
+        new Cleave(field, {
+            creditCard: true,
+            onCreditCardTypeChanged: function (type) {
+
+                if (selectedCardIcon) {
+                    $('#input-card-icon').removeClass().addClass('fa fa-envelope-o form-control-feedback');
+                    // DOM.removeClass(selectedCardIcon, 'active');
+                }
+
+                selectedCardIcon = $('#input-card-icon.fa-cc-' + type);
+
+                if (selectedCardIcon) {
+                    $('#input-card-icon').removeClass().addClass('form-control-feedback fa fa-cc-' + type);
+                    //    DOM.addClass(selectedCardIcon, 'active');
+                }
+            }
+        });
+    });
+
+    $('.input-routing-number').toArray().forEach(function (field) {
+        new Cleave(field, {
+            blocks: [9],
+            numericOnly: true,
+
+        });
+    });
+
+    $('.stripe-button-el').hide();
+    $('.payment-row').show();
+
+    $('#verifyBank').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var recipient = button.data('whatever') // Extract info from data-* attributes
+        var modal = $(this)
+        modal.find('.modal-body #account_name').val(recipient)
+    });
+
+    $('#select-payed-method').change(function() {
+
+        var payment_method=$(this).val();
+        $.each(PayMethods, function (key, val) {
+
+          if (val.id==payment_method) {
+
+              var total=$('#modal-payment-amount-id').formatCurrency({symbol: '$ ', region: 'en-US'}).asNumber();
+
+              if (val.fee_percents!=0)
+              {
+                  total=total*(1+val.fee/100);
+                  $('.fee_value').html(val.fee+'%');
+              }
+                  else
+              {   total=1*total+1*val.fee;
+                  $('.fee_value').html(val.fee).formatCurrency({symbol: '$', region: 'en-US'});
+
+              }
+                  $('.modal-payment-amount-fee').html(total).formatCurrency({symbol: '$ ', region: 'en-US'});
+
+
+          }
+          });
+    });
+
+    $('#pay-with-save-method').on('show.bs.modal', function (event) {
+
+        var button = $(event.relatedTarget)
+        var description = button.data('description')
+        var amount = button.data('amount')
+        var orderid = button.data('orderid')
+
+
+
+        var modal = $(this)
+        modal.find('.modal-payment-description').html(description);
+        modal.find('.modal-payment-amount').html(amount).formatCurrency({symbol: '$ ', region: 'en-US'});
+
+
+        var selectList = $('#select-payed-method');
+        selectList.find('option')
+            .remove()
+            .end();
+        $('.modal-show-clear').html('');
+        selectList.selectpicker('refresh');
+        $(".loading_waiting").show();
+        $.getJSON('/user/payment/methods?return_format=json&u_' + Date.now(), function (data) {
+            PayMethods=data.methods;
+            selectList.append($("<option></option>").text(''));
+            $.each(data.methods, function (key, val) {
+                if (val.type == 'card')
+                    selectList.append($("<option></option>")
+                        .attr("value", val.id)
+                        .data('content', val.img +
+                            '<kbd class="payment_select">' + val.last4 + ' </kbd> Expires: <kbd class="payment_select">' + val.exp_month + ' / ' + val.exp_year + '</kbd>')
+                        .text(val.last4));
+                else if (val.type == 'bank')
+                    selectList.append($("<option></option>")
+                        .attr("value", val.id)
+                        .data('content', '<i class="card-logo fa fa-bank text-success"></i>' +
+                            val.bank_name + ' <kbd class="payment_select">' + val.last4 + '</kbd>' + val.currency)
+                        .text(val.last4));
+            });
+
+            selectList.selectpicker('refresh');
+
+            $('#pay_order_id').val(orderid);
+
+            $(".loading_waiting").hide();
+        });
+
+    });
+
+    $('.payment-collapse').on('shown.bs.collapse', function () {
+        this.scrollIntoView();
+    });
+
+    $('.submit-fast-charge').click(function () {
+        var chargeForm = $(this).parent().find('form')[0];
+        $(chargeForm).find('.stripe-button-el').click();
+        return false;
+    });
+    $('.payment-delete-button').click(function () {
+
+        var url = $(this).attr('href');
+        var btn = $(this);
+        $(btn).addClass('disabled').find('i').toggleClass('fa-trash').toggleClass('fa-clock-o');
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: url + '&_token=' + $('meta[name="csrf-token"]').attr('content') + '&return_format=json',
+            success: function (data) {
+                if (data.deleted == true) {
+
+                    $.notify({
+                        // options
+                        message: 'Success deleted',
+                    }, {
+                        // settings
+                        type: 'success',
+                        delay: 1000,
+                        placement: {
+                            from: "top",
+                            align: "center"
+                        },
+                    });
+                    $('#' + data.id).remove();
+                }
+                else {
+                    $.notify({
+                        // options
+                        message: 'Error.' + data.error,
+                    }, {
+                        // settings
+                        type: 'danger',
+                        delay: 1000,
+                        placement: {
+                            from: "top",
+                            align: "center"
+                        },
+                    });
+                }
+                $(btn).removeClass('disabled').find('i').toggleClass('fa-trash').toggleClass('fa-clock-o');
+            },
+            error: function (jqXHR, exception) {
+                $(btn).removeClass('disable').find('i').toggleClass('fa-trash').toggleClass('fa-clock-o');
+                $.notify({
+                    // options
+                    message: 'Error. Can not delete',
+                }, {
+                    // settings
+                    type: 'danger',
+                    delay: 1000,
+                    placement: {
+                        from: "top",
+                        align: "center"
+                    },
+                });
+            }
+        });
+
+
+        return false;
+
+    });
+
+})
+
+$(document).on("click", ".btn-modal-pay-submit", function (event) {
+    if ($('#select-payed-method').val())
+        $('#payment_form_modal').submit();
+
+    return false;
+});
+
+

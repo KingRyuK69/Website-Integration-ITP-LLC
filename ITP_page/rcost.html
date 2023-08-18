@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    .form-group {
+      text-align: left;
+      margin-bottom: 10px;
+    }
+
+    .info-button {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background-color: transparent;
+      border: 1px solid #ccc;
+      color: #333;
+      text-align: center;
+      line-height: 15px;
+      cursor: pointer;
+    }
+
+    .info-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.9);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .info-message {
+      padding: 20px;
+      border-radius: 10px;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      color: #333;
+    }
+
+    .close-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    
+    .dropdown {
+      display: inline-block;
+      position: relative;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .dropdown-label {
+      display: block;
+      width: 332px;
+      height: 46px;
+      line-height: 46px;
+      border-radius: 10px;
+      padding: 0 20px;
+      background-color: white;
+      border: 1px solid #ccc;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    .dropdown-options {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      background-color: white;
+      display: none;
+      border: 1px solid #ccc;
+      border-top: none;
+      border-radius: 0 0 10px 10px;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+      /* Adding a drop shadow */
+    }
+
+    .dropdown-option {
+      padding: 10px;
+      transition: background-color 0.3s ease-in-out;
+      cursor: pointer;
+    }
+
+    .dropdown-option:hover {
+      background-color: #0A718A;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="form-group">
+    <label for="recurrence">Recurrence Cost:</label>
+    <span class="info-button" id="info-button">?</span>
+    <div class="info-overlay" id="info-overlay">
+      <div class="info-message">
+        <span class="close-button" id="close-button">&times;</span>
+        Recurring cost refers to expenses or charges that are incurred on a regular basis at fixed intervals. These costs occur periodically, such as monthly, quarterly, or annually.
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="dropdown" id="recurrence">
+      <div class="dropdown-label" id="selected-value">Select an option</div>
+      <div class="dropdown-options">
+        <div class="dropdown-option" data-value="monthly">Monthly</div>
+        <div class="dropdown-option" data-value="annually">Annually</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const dropdown = document.getElementById('recurrence');
+    const dropdownLabel = dropdown.querySelector('.dropdown-label');
+    const dropdownOptions = dropdown.querySelector('.dropdown-options');
+    const infoButton = document.getElementById('info-button');
+    const infoOverlay = document.getElementById('info-overlay');
+    const closeButton = document.getElementById('close-button');
+
+    dropdown.addEventListener('click', () => {
+      dropdownOptions.style.display = dropdownOptions.style.display === 'block' ? 'none' : 'block';
+    });
+
+    infoButton.addEventListener('click', () => {
+      infoOverlay.style.display = 'flex';
+    });
+
+    closeButton.addEventListener('click', () => {
+      infoOverlay.style.display = 'none';
+    });
+
+    dropdownOptions.addEventListener('click', (event) => {
+      const selectedOption = event.target;
+      const value = selectedOption.getAttribute('data-value');
+      dropdownLabel.textContent = value === 'monthly' ? '$10,000' : '$120,000';
+      dropdownOptions.style.display = 'none';
+    });
+
+    // Close the dropdown and info message when clicking outside
+    document.addEventListener('click', (event) => {
+      if (!dropdown.contains(event.target)) {
+        dropdownOptions.style.display = 'none';
+      }
+      if (!infoButton.contains(event.target) && !infoOverlay.contains(event.target)) {
+        infoOverlay.style.display = 'none';
+      }
+    });
+  </script>
+
+</body>
+
+</html>

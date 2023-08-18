@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .form-group {
+      text-align: left;
+      margin-bottom: 10px;
+    }
+
+    .dropdown {
+      display: inline-block;
+      position: relative;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .dropdown-label {
+      display: block;
+      width: 332px;
+      height: 46px;
+      line-height: 46px;
+      border-radius: 0px;
+      padding: 0 20px;
+      background-color: white;
+      border: 1px solid #ccc;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    .dropdown-options {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      background-color: white;
+      display: none;
+      border: 1px solid #ccc;
+      border-top: none;
+      border-radius: 0 0 10px 10px;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .dropdown-option {
+      padding: 10px;
+      transition: background-color 0.3s ease-in-out;
+      cursor: pointer;
+    }
+
+    .dropdown-option:hover {
+      background-color: #0A718A;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="form-group">
+    <label for="country">Country:</label>
+  </div>
+
+  <div class="form-group">
+    <div class="dropdown" id="country">
+      <div class="dropdown-label">Select a country</div>
+      <div class="dropdown-options">
+        <div class="dropdown-option" data-value="USA">Usa</div>
+        <div class="dropdown-option" data-value="Canada">Canada</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const dropdown = document.getElementById('country');
+    const dropdownLabel = dropdown.querySelector('.dropdown-label');
+    const dropdownOptions = dropdown.querySelector('.dropdown-options');
+
+    dropdown.addEventListener('click', () => {
+      dropdownOptions.style.display = dropdownOptions.style.display === 'block' ? 'none' : 'block';
+    });
+
+    dropdownOptions.addEventListener('click', (event) => {
+      const selectedOption = event.target;
+      const value = selectedOption.getAttribute('data-value');
+      dropdownLabel.textContent = selectedOption.textContent;
+      dropdownOptions.style.display = 'none';
+    });
+  </script>
+
+</body>
+
+</html>
